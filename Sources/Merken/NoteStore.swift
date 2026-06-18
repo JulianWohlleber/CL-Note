@@ -207,10 +207,13 @@ class NoteStore: ObservableObject {
     private func extractTasksIncrementally(for notes: [Note]) async {
         var pending: [NoteTask] = []
         let batchSize = 50
+        let maxScanBytes = 2 * 1024 * 1024   // 2 MB — tasks don't live in huge blobs
 
         for (i, note) in notes.enumerated() {
             if Task.isCancelled { return }
-            if let text = try? String(contentsOf: note.fileURL, encoding: .utf8) {
+            let size = (try? note.fileURL.resourceValues(forKeys: [.fileSizeKey]))?.fileSize ?? 0
+            if size <= maxScanBytes,
+               let text = try? String(contentsOf: note.fileURL, encoding: .utf8) {
                 pending.append(contentsOf: Self.extractTasksFromText(
                     text, sourceFile: note.fileURL.lastPathComponent))
             }
