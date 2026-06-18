@@ -17,6 +17,15 @@ struct SidebarView: View {
         return store.summaries.filter { $0.title.localizedCaseInsensitiveContains(search) }
     }
 
+    /// Parent folder of `note` relative to the vault root, or nil if it sits in
+    /// the root. Used to disambiguate notes with the same title in the sidebar.
+    private func subfolder(for note: Note) -> String? {
+        guard let vaultURL = store.vaultURL else { return nil }
+        let rel = String(note.fileURL.path.dropFirst(vaultURL.path.count + 1))
+        let parent = (rel as NSString).deletingLastPathComponent
+        return parent.isEmpty ? nil : parent
+    }
+
     var body: some View {
         VStack(spacing: 0) {
             // ── Search + New ──────────────────────────────────────────────
@@ -40,9 +49,9 @@ struct SidebarView: View {
             ScrollView {
                 LazyVStack(spacing: 0) {
 
-                    // Root-level notes only
                     ForEach(filteredNotes) { note in
                         NoteRowView(note: note,
+                                    subfolder: subfolder(for: note),
                                     isSelected: store.selectedNote?.id == note.id)
                             .onTapGesture { store.selectedNote = note }
                             .contextMenu {
@@ -84,6 +93,7 @@ struct SidebarView: View {
                     } else {
                         ForEach(filteredSummaries) { note in
                             NoteRowView(note: note,
+                                        subfolder: nil,
                                         isSelected: store.selectedNote?.id == note.id)
                                 .onTapGesture { store.selectedNote = note }
                         }
@@ -99,6 +109,7 @@ struct SidebarView: View {
 
 struct NoteRowView: View {
     let note: Note
+    let subfolder: String?
     let isSelected: Bool
     @State private var hovered = false
 
@@ -108,12 +119,20 @@ struct NoteRowView: View {
                 .fill(isSelected ? C.primaryStart : Color.clear)
                 .frame(width: 2)
 
-            Text(note.title)
-                .font(F.syneUI(12))
-                .foregroundColor(isSelected ? C.text : (hovered ? C.accent : C.textDim))
-                .lineLimit(1)
-                .padding(.horizontal, 12)
-                .padding(.vertical, 8)
+            VStack(alignment: .leading, spacing: 1) {
+                Text(note.title)
+                    .font(F.syneUI(12))
+                    .foregroundColor(isSelected ? C.text : (hovered ? C.accent : C.textDim))
+                    .lineLimit(1)
+                if let subfolder {
+                    Text(subfolder)
+                        .font(F.syneUI(9))
+                        .foregroundColor(C.textFaint)
+                        .lineLimit(1)
+                }
+            }
+            .padding(.horizontal, 12)
+            .padding(.vertical, 8)
 
             Spacer()
         }
