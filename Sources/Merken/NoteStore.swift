@@ -301,6 +301,10 @@ class NoteStore: ObservableObject {
             self.vaultIndex    = finalIdx
             self.indexProgress = touched ? "Index up to date (\(updated) updated)" : ""
         }
+        // Let the status linger briefly, then clear it so it doesn't haunt the UI.
+        try? await Task.sleep(nanoseconds: 3_000_000_000)
+        if Task.isCancelled { return }
+        await MainActor.run { self.indexProgress = "" }
     }
 
     /// Extract tasks from raw markdown text — doesn't require a loaded Note.
