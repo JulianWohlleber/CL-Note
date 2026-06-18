@@ -122,38 +122,18 @@ actor OllamaClient {
         return ChatResult(answer: "No response from Ollama.", sources: [])
     }
 
-    /// Load the file content for an index entry by reconstructing the URL
-    /// from the saved vaultPath. Returns nil if the file can't be read.
+    /// Load file content using the index's vaultPath. Tries the root first,
+    /// falls back to a one-shot recursive lookup for files in subfolders.
     private static func loadContent(forFile file: String, in index: VaultIndex) -> String? {
-        // The entry's `file` is just the lastPathComponent. We need the absolute
-        // URL — walk the vault root + any known subdir. Easiest: rely on the
-        // NoteStore's notes list via NotificationCenter? Simpler still: search
-        // recursively under vaultPath. But vaultPath in VaultIndex may be unset
-        // for now, so fall back: scan the default vault directory.
-        // Instead, use a file-system search via FileManager.
-        let fm = FileManager.default
-        // Try common Application Support config to find the active vault path.
-        let cfgURL = fm.urls(for: .applicationSupportDirectory, in: .userDomainMask).first!
-            .appendingPathComponent("Merken/vaults.json")
-        guard let data = try? Data(contentsOf: cfgURL),
-              let json = try? JSONSerialization.jsonObject(with: data) as? [String: Any],
-              let active = json["active"] as? String,
-              let vaults = json["vaults"] as? [[String: Any]],
-              let vpath = vaults.first(where: { ($0["id"] as? String) == active })?["path"] as? String
-        else { return nil }
-        let root = URL(fileURLWithPath: vpath)
-        // Shallow try: root/file
+        guard !index.vaultPath.isEmpty else { return nil }
+        let root = URL(fileURLWithPath: index.vaultPath)
         let direct = root.appendingPathComponent(file)
         if let text = try? String(contentsOf: direct, encoding: .utf8) { return text }
-        // Recursive walk (bounded — only looking up a single file).
-        if let enumerator = fm.enumerator(at: root, includingPropertiesForKeys: nil,
-                                          options: [.skipsHiddenFiles]) {
-            for case let url as URL in enumerator {
-                if url.lastPathComponent == file,
-                   let text = try? String(contentsOf: url, encoding: .utf8) {
-                    return text
-                }
-            }
+        let fm = FileManager.default
+        guard let enumerator = fm.enumerator(at: root, includingPropertiesForKeys: nil,
+                                             options: [.skipsHiddenFiles]) else { return nil }
+        for case let url as URL in enumerator where url.lastPathComponent == file {
+            return try? String(contentsOf: url, encoding: .utf8)
         }
         return nil
     }

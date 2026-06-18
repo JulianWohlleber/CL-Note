@@ -233,8 +233,11 @@ class NoteStore: ObservableObject {
     private func buildOrUpdateIndex(for notes: [Note], vaultID: String) async {
         guard !vaultID.isEmpty else { return }
 
+        let vaultPath = await MainActor.run { self.vaultURL?.path ?? "" }
+
         // Start from a saved index if we have one; keeps launch snappy.
-        var idx = VaultIndex.load(fromVaultID: vaultID) ?? VaultIndex.empty(vaultPath: "")
+        var idx = VaultIndex.load(fromVaultID: vaultID) ?? VaultIndex.empty(vaultPath: vaultPath)
+        idx.vaultPath = vaultPath   // refresh in case the vault was moved on disk
         await MainActor.run { self.vaultIndex = idx }
 
         let fm = FileManager.default
