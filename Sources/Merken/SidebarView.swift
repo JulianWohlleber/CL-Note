@@ -117,7 +117,7 @@ struct NoteRowView: View {
         HStack(spacing: 0) {
             Rectangle()
                 .fill(isSelected ? C.primaryStart : Color.clear)
-                .frame(width: 2)
+                .frame(width: 1)
 
             VStack(alignment: .leading, spacing: 1) {
                 Text(note.title)
@@ -132,11 +132,11 @@ struct NoteRowView: View {
                 }
             }
             .padding(.horizontal, 12)
-            .padding(.vertical, 8)
+            .padding(.vertical, 7)
 
             Spacer()
         }
-        .background(isSelected ? C.bgHover : (hovered ? C.bgHover.opacity(0.5) : Color.clear))
+        .background(isSelected ? C.bgHover : (hovered ? C.bgHover.opacity(0.25) : Color.clear))
         .onHover { hovered = $0 }
         .animation(.easeInOut(duration: 0.1), value: hovered)
         .animation(.easeInOut(duration: 0.1), value: isSelected)
