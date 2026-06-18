@@ -243,7 +243,6 @@ class NoteStore: ObservableObject {
         idx.vaultPath = vaultPath   // refresh in case the vault was moved on disk
         await MainActor.run { self.vaultIndex = idx }
 
-        let fm = FileManager.default
         let total = notes.count
         var updated = 0
         var touched = false
@@ -284,9 +283,6 @@ class NoteStore: ObservableObject {
                 try? await Task.sleep(nanoseconds: 10_000_000)
             }
 
-            // Skip orphaned entries for files that no longer exist. We'll do a
-            // full prune pass at the end so we don't query FS twice per entry.
-            _ = fm
         }
 
         // Prune entries for files that are no longer present.
@@ -322,12 +318,6 @@ class NoteStore: ObservableObject {
             }
         }
         return result
-    }
-
-    /// Reads a note from disk and extracts tasks. Discards content after.
-    private func extractTasks(from note: Note) -> [NoteTask] {
-        let text = note.readContent()
-        return Self.extractTasksFromText(text, sourceFile: note.fileURL.lastPathComponent)
     }
 
     func toggleTask(_ task: NoteTask) {
