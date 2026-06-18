@@ -109,7 +109,11 @@ actor OllamaClient {
             if let json    = try? JSONSerialization.jsonObject(with: resp) as? [String: Any],
                let msg     = json["message"] as? [String: Any],
                let content = msg["content"] as? String {
-                let sources = relevant.map { ChatSource(file: $0.file, title: $0.title) }
+                var seen = Set<String>()
+                let sources = relevant.compactMap { entry -> ChatSource? in
+                    guard seen.insert(entry.file).inserted else { return nil }
+                    return ChatSource(file: entry.file, title: entry.title)
+                }
                 return ChatResult(answer: content, sources: sources)
             }
         } catch {
