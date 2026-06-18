@@ -1,0 +1,67 @@
+import SwiftUI
+import AppKit
+
+@main
+struct MerkenApp: App {
+    @StateObject private var store = NoteStore()
+
+    init() {
+        registerFonts()
+    }
+
+    var body: some Scene {
+        WindowGroup {
+            ContentView()
+                .environmentObject(store)
+                .onAppear {
+                    if store.vaultURL == nil { store.pickVault() }
+                    configureWindow()
+                }
+        }
+        .windowStyle(.hiddenTitleBar)
+        .commands {
+            CommandGroup(replacing: .newItem) {
+                Button("New Note") { store.createNote() }
+                    .keyboardShortcut("n", modifiers: .command)
+            }
+            CommandGroup(after: .newItem) {
+                Divider()
+                Button("Chat") {
+                    store.requestedTab = AppTab.chat.rawValue
+                }
+                .keyboardShortcut("1", modifiers: .command)
+
+                Button("Notes") {
+                    store.requestedTab = AppTab.notes.rawValue
+                }
+                .keyboardShortcut("2", modifiers: .command)
+
+                Button("Tasks") {
+                    store.toggleTasksRequest += 1
+                }
+                .keyboardShortcut("t", modifiers: .command)
+
+                Divider()
+                Button("Open Vault…") { store.pickVault() }
+                    .keyboardShortcut("o", modifiers: [.command, .shift])
+                Button("Reload Notes") { store.loadNotes() }
+                    .keyboardShortcut("r", modifiers: .command)
+                Button("Summarize Vault Now") {
+                    Task { await SummaryEngine.shared.run(store: store) }
+                }
+                .keyboardShortcut("s", modifiers: [.command, .shift])
+            }
+        }
+    }
+
+    private func configureWindow() {
+        NSApp.appearance = NSAppearance(named: .darkAqua)
+        guard let win = NSApp.windows.first else { return }
+        win.titlebarAppearsTransparent = true
+        win.titleVisibility            = .hidden
+        win.backgroundColor            = C.bgNS
+        win.isMovableByWindowBackground = true
+        win.setContentSize(NSSize(width: 1100, height: 700))
+        win.minSize = NSSize(width: 760, height: 500)
+    }
+}
