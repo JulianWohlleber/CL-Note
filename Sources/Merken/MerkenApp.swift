@@ -4,6 +4,8 @@ import AppKit
 @main
 struct MerkenApp: App {
     @StateObject private var store = NoteStore()
+    @AppStorage("merken.didCompleteSetup") private var didCompleteSetup = false
+    @State private var showSetup = false
 
     init() {
         registerFonts()
@@ -13,9 +15,23 @@ struct MerkenApp: App {
         WindowGroup {
             ContentView()
                 .environmentObject(store)
+                .sheet(isPresented: $showSetup) {
+                    SetupWizardView(isPresented: $showSetup,
+                                    didCompleteSetup: $didCompleteSetup)
+                        .environmentObject(store)
+                }
                 .onAppear {
-                    if store.vaultURL == nil { store.pickVault() }
+                    // Source of truth: the vault must actually exist on disk.
+                    // The completion flag alone can lie (external drive
+                    // unmounted, vault folder deleted, migration failed).
+                    showSetup = (store.vaultURL == nil)
+                    if store.vaultURL != nil { didCompleteSetup = true }
                     configureWindow()
+                }
+                .onChange(of: store.vaultURL) { newValue in
+                    // If the user removes their last vault mid-session, bring
+                    // the wizard back instead of leaving them stranded.
+                    if newValue == nil { showSetup = true }
                 }
         }
         .windowStyle(.hiddenTitleBar)

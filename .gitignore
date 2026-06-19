@@ -4,3 +4,4 @@ Merken.app/
 *.xcodeproj
 .swiftpm/
 Package.resolved
+*.dmg
