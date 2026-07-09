@@ -20,7 +20,7 @@ Note_ is an Obsidian-compatible Markdown editor that keeps a small AI model on y
 
 ## Install
 
-Download the DMG from the [latest release](https://github.com/JulianWohlleber/CL-Note_/releases/latest), drag `Note_.app` onto the `Applications` shortcut, and launch it.
+Download the DMG from the [latest release](https://github.com/JulianWohlleber/CL-Note/releases/latest), drag `Note_.app` onto the `Applications` shortcut, and launch it.
 
 On first launch Note_ sets everything up in-app:
 

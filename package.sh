@@ -38,7 +38,7 @@ On first launch Note_ will:
   · let you pick a model — the recommended one fits 16 GB Macs
   · download the model in the background, no terminal needed
 
-Source & issues:  https://github.com/JulianWohlleber/CL-Note_
+Source & issues:  https://github.com/JulianWohlleber/CL-Note
 EOF
 
 echo "▸ Building $DMG…"
