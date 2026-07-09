@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="docs/icon.png" alt="" width="120">
+  <img src="docs/icon-v2.png" alt="" width="120">
 </p>
 
 <h1 align="center">Merken</h1>
@@ -7,7 +7,7 @@
 <p align="center"><em>A local-first notes app for macOS.</em></p>
 
 <p align="center">
-  <img src="docs/hero.png" alt="Merken screenshot" width="880">
+  <img src="docs/hero-v2.png" alt="Merken screenshot" width="880">
 </p>
 
 Merken is an Obsidian-compatible Markdown editor that keeps a small AI model on your Mac and points it at your vault. Search, chat and summarisation happen locally — no cloud, no keys.
