@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="docs/icon-v2.png" alt="" width="120">
+  <img src="docs/icon-v4.png" alt="" width="120">
 </p>
 
 <h1 align="center">Note_</h1>
