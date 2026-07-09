@@ -42,7 +42,7 @@ struct SetupWizardView: View {
 
     private var header: some View {
         HStack {
-            Text("MERKEN · SETUP")
+            Text("NOTE_ · SETUP")
                 .font(F.syneUI(9))
                 .tracking(1.4)
                 .foregroundColor(C.textFaint)
@@ -98,7 +98,7 @@ struct SetupWizardView: View {
 
     private var welcomeStep: some View {
         VStack(alignment: .leading, spacing: 22) {
-            title("Set up Merken")
+            title("Set up Note_")
             subtitle("Three small things and you're ready to write.")
             VStack(alignment: .leading, spacing: 10) {
                 bullet("Pick a folder for your notes.")
@@ -152,7 +152,7 @@ struct SetupWizardView: View {
     private var ollamaStep: some View {
         VStack(alignment: .leading, spacing: 20) {
             title("Set up Ollama")
-            subtitle("Merken runs Ollama locally so your notes never leave your Mac. We just need to start it up.")
+            subtitle("Note_ runs Ollama locally so your notes never leave your Mac. We just need to start it up.")
 
             HStack(spacing: 10) {
                 Circle()
@@ -197,7 +197,7 @@ struct SetupWizardView: View {
                     .buttonStyle(.plain)
                     .disabled(checkingOllama)
                 }
-                Text("Ollama is a small menu-bar app. After installing, open it once so the daemon starts — Merken will pick it up automatically.")
+                Text("Ollama is a small menu-bar app. After installing, open it once so the daemon starts — Note_ will pick it up automatically.")
                     .font(F.syneUI(10))
                     .foregroundColor(C.textFaint)
                     .fixedSize(horizontal: false, vertical: true)
@@ -329,7 +329,7 @@ struct SetupWizardView: View {
     private var doneStep: some View {
         VStack(alignment: .leading, spacing: 20) {
             title("You're set")
-            subtitle("Merken is ready. Notes go in your vault, chat hits \(selectedModel.displayName) locally — no cloud.")
+            subtitle("Note_ is ready. Notes go in your vault, chat hits \(selectedModel.displayName) locally — no cloud.")
             Spacer()
             HStack {
                 Spacer()
@@ -338,7 +338,7 @@ struct SetupWizardView: View {
                     didCompleteSetup = true
                     isPresented = false
                 } label: {
-                    Text("Open Merken")
+                    Text("Open Note_")
                         .font(F.syneUI(12, weight: .bold))
                         .foregroundColor(C.text)
                         .padding(.horizontal, 18)

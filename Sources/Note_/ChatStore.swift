@@ -38,7 +38,7 @@ final class ChatStore: ObservableObject {
 
     private let dir: URL = {
         let base = FileManager.default.urls(for: .applicationSupportDirectory, in: .userDomainMask).first!
-        return base.appendingPathComponent("Merken/chats")
+        return base.appendingPathComponent("Note_/chats")
     }()
 
     private init() {

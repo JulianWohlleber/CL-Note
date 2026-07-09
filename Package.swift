@@ -2,12 +2,12 @@
 import PackageDescription
 
 let package = Package(
-    name: "Merken",
+    name: "Note_",
     platforms: [.macOS(.v13)],
     targets: [
         .executableTarget(
-            name: "Merken",
-            path: "Sources/Merken",
+            name: "Note_",
+            path: "Sources/Note_",
             resources: [
                 .process("Resources")
             ]

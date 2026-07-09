@@ -1,17 +1,17 @@
 #!/usr/bin/env bash
-# package.sh — build Merken.app and wrap it in a drag-install DMG.
+# package.sh — build Note_.app and wrap it in a drag-install DMG.
 #
 # Usage:  ./package.sh [version]
-# e.g.    ./package.sh 0.2.0   →   Merken-0.2.0.dmg
+# e.g.    ./package.sh 0.2.0   →   Note_-0.2.0.dmg
 set -euo pipefail
 
 VERSION="${1:-0.2.0}"
-APP="Merken.app"
-DMG="Merken-${VERSION}.dmg"
+APP="Note_.app"
+DMG="Note_-${VERSION}.dmg"
 
 cd "$(dirname "$0")"
 
-echo "▸ Building Merken.app…"
+echo "▸ Building Note_.app…"
 ./build.sh > /dev/null
 
 if [[ ! -d "$APP" ]]; then
@@ -19,7 +19,7 @@ if [[ ! -d "$APP" ]]; then
     exit 1
 fi
 
-STAGING=$(mktemp -d -t merken-pkg)
+STAGING=$(mktemp -d -t note_-pkg)
 trap 'rm -rf "$STAGING"' EXIT
 
 echo "▸ Staging contents in $STAGING…"
@@ -27,24 +27,24 @@ cp -R "$APP" "$STAGING/"
 ln -s /Applications "$STAGING/Applications"
 
 cat > "$STAGING/README.txt" <<EOF
-Merken ${VERSION}
+Note_ ${VERSION}
 
 To install:
-  Drag Merken.app onto the Applications shortcut.
+  Drag Note_.app onto the Applications shortcut.
 
-On first launch Merken will:
+On first launch Note_ will:
   · ask you to pick a vault folder
   · check for Ollama (and send you to install it if missing)
   · let you pick a model — the recommended one fits 16 GB Macs
   · download the model in the background, no terminal needed
 
-Source & issues:  https://github.com/JulianWohlleber/CL-Merken
+Source & issues:  https://github.com/JulianWohlleber/CL-Note_
 EOF
 
 echo "▸ Building $DMG…"
 rm -f "$DMG"
 hdiutil create \
-    -volname "Merken ${VERSION}" \
+    -volname "Note_ ${VERSION}" \
     -srcfolder "$STAGING" \
     -ov \
     -format UDZO \

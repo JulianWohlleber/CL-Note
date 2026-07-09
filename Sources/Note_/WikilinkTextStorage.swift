@@ -48,7 +48,7 @@ private final class CheckboxAttachmentCell: NSTextAttachmentCell {
 final class WikilinkTextStorage: NSTextStorage {
 
     // A custom attribute we attach to [[...]] ranges so clicks can navigate.
-    static let wikilinkKey = NSAttributedString.Key("com.merken.wikilinkTarget")
+    static let wikilinkKey = NSAttributedString.Key("com.note_.wikilinkTarget")
 
     // MARK: – Cursor tracking
 

@@ -31,7 +31,7 @@ struct VaultIndex: Codable {
     static func url(forVaultID id: String) -> URL {
         let base = FileManager.default.urls(for: .applicationSupportDirectory,
                                             in: .userDomainMask).first!
-            .appendingPathComponent("Merken")
+            .appendingPathComponent("Note_")
         try? FileManager.default.createDirectory(at: base, withIntermediateDirectories: true)
         return base.appendingPathComponent("index-\(id).json")
     }

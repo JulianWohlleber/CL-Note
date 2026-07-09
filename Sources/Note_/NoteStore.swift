@@ -38,12 +38,12 @@ class NoteStore: ObservableObject {
     private var indexingTask: Task<Void, Never>?
 
     var activeVaultName: String {
-        vaultEntries.first { $0.id == activeVaultID }?.name ?? "Merken"
+        vaultEntries.first { $0.id == activeVaultID }?.name ?? "Note_"
     }
 
     private let supportDir: URL = {
         let base = FileManager.default.urls(for: .applicationSupportDirectory, in: .userDomainMask).first!
-        return base.appendingPathComponent("Merken")
+        return base.appendingPathComponent("Note_")
     }()
     private var configURL: URL { supportDir.appendingPathComponent("config.json") }
     private var vaultsURL: URL { supportDir.appendingPathComponent("vaults.json") }
@@ -61,11 +61,27 @@ class NoteStore: ObservableObject {
     // MARK: – Config
 
     private func loadConfig() {
-        // Try Merken vaults.json
+        // Try Note_ vaults.json
         if let data = try? Data(contentsOf: vaultsURL),
            let cfg  = try? JSONDecoder().decode(VaultsConfig.self, from: data) {
             vaultEntries  = cfg.vaults
             activeVaultID = cfg.active
+            if let v = cfg.vaults.first(where: { $0.id == cfg.active }),
+               FileManager.default.fileExists(atPath: v.path) {
+                vaultURL = URL(fileURLWithPath: v.path)
+                loadNotes(); return
+            }
+        }
+        // Migrate from legacy "Merken" install — the app was renamed and users
+        // upgrading in-place still have their vault list under the old dir.
+        // NOTE: the literal "Merken" is intentional; do not rename.
+        let legacyURL = FileManager.default.urls(for: .applicationSupportDirectory, in: .userDomainMask)
+            .first!.appendingPathComponent("Merken/vaults.json")
+        if let data = try? Data(contentsOf: legacyURL),
+           let cfg  = try? JSONDecoder().decode(VaultsConfig.self, from: data) {
+            vaultEntries  = cfg.vaults
+            activeVaultID = cfg.active
+            saveConfig()
             if let v = cfg.vaults.first(where: { $0.id == cfg.active }),
                FileManager.default.fileExists(atPath: v.path) {
                 vaultURL = URL(fileURLWithPath: v.path)

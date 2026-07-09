@@ -2,13 +2,24 @@ import SwiftUI
 import AppKit
 
 @main
-struct MerkenApp: App {
+struct Note_App: App {
     @StateObject private var store = NoteStore()
-    @AppStorage("merken.didCompleteSetup") private var didCompleteSetup = false
+    @AppStorage("note_.didCompleteSetup") private var didCompleteSetup = false
     @State private var showSetup = false
 
     init() {
         registerFonts()
+        Self.migrateSetupFlag()
+    }
+
+    /// One-time copy of the pre-rename UserDefaults key so returning users
+    /// aren't asked to redo setup. NOTE: the literal "merken.didCompleteSetup"
+    /// is intentional; do not rename.
+    private static func migrateSetupFlag() {
+        let d = UserDefaults.standard
+        guard d.object(forKey: "note_.didCompleteSetup") == nil,
+              let legacy = d.object(forKey: "merken.didCompleteSetup") as? Bool else { return }
+        d.set(legacy, forKey: "note_.didCompleteSetup")
     }
 
     var body: some Scene {

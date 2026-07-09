@@ -2,15 +2,15 @@
   <img src="docs/icon-v2.png" alt="" width="120">
 </p>
 
-<h1 align="center">Merken</h1>
+<h1 align="center">Note_</h1>
 
 <p align="center"><em>A local-first notes app for macOS.</em></p>
 
 <p align="center">
-  <img src="docs/hero-v2.png" alt="Merken screenshot" width="880">
+  <img src="docs/hero-v2.png" alt="Note_ screenshot" width="880">
 </p>
 
-Merken is an Obsidian-compatible Markdown editor that keeps a small AI model on your Mac and points it at your vault. Search, chat and summarisation happen locally — no cloud, no keys.
+Note_ is an Obsidian-compatible Markdown editor that keeps a small AI model on your Mac and points it at your vault. Search, chat and summarisation happen locally — no cloud, no keys.
 
 - Plain `.md` files on disk. Your vault stays yours.
 - Wikilink editor with `[[note]]` autocomplete.
@@ -20,9 +20,9 @@ Merken is an Obsidian-compatible Markdown editor that keeps a small AI model on 
 
 ## Install
 
-Download the DMG from the [latest release](https://github.com/JulianWohlleber/CL-Merken/releases/latest), drag `Merken.app` onto the `Applications` shortcut, and launch it.
+Download the DMG from the [latest release](https://github.com/JulianWohlleber/CL-Note_/releases/latest), drag `Note_.app` onto the `Applications` shortcut, and launch it.
 
-On first launch Merken sets everything up in-app:
+On first launch Note_ sets everything up in-app:
 
 1. Pick a vault folder.
 2. Detect Ollama — or take you to install it in one click.
@@ -34,7 +34,7 @@ No terminal, no `curl … | sh`, no picking model names off a wiki.
 ## Build from source
 
 ```sh
-./build.sh && open Merken.app
+./build.sh && open Note_.app
 ```
 
 Requires macOS 13+ and Swift 5.9. Chat requires [Ollama](https://ollama.com) reachable on `localhost:11434`.
